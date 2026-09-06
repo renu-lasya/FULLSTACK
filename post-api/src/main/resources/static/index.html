@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Post Management Dashboard</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            color: #1e293b;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            padding: 28px 7%;
+            box-shadow: 0 8px 25px rgba(79,70,229,0.25);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            opacity: .85;
+            font-size: 15px;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* STAT CARDS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,.07);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+        }
+
+        .stat h3 {
+            margin-top: 8px;
+            font-size: 25px;
+            color: #4f46e5;
+        }
+
+        .stat p {
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* FORM */
+
+        .form-card {
+            background: white;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+            margin-bottom: 35px;
+        }
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4f46e5;
+            margin-bottom: 22px;
+        }
+
+        .form-title h2 {
+            font-size: 23px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #dbe2ea;
+            border-radius: 12px;
+            outline: none;
+            font-size: 15px;
+            transition: .2s;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,.12);
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .create-btn {
+            border: none;
+            background: linear-gradient(135deg,#4f46e5,#7c3aed);
+            color: white;
+            padding: 13px 24px;
+            border-radius: 11px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(79,70,229,.3);
+        }
+
+        /* SECTION */
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+        }
+
+        /* POSTS */
+
+        .posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+            gap: 20px;
+        }
+
+        .post-card {
+            background: white;
+            padding: 23px;
+            border-radius: 18px;
+            border-left: 5px solid #6366f1;
+            box-shadow: 0 8px 25px rgba(0,0,0,.07);
+            transition: .25s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(0,0,0,.12);
+        }
+
+        .post-id {
+            color: #6366f1;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: .5px;
+        }
+
+        .post-card h3 {
+            margin: 9px 0;
+            font-size: 20px;
+        }
+
+        .post-content {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .date {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            padding: 7px 11px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 9px;
+            margin-top: 18px;
+        }
+
+        .delete-btn,
+        .error-btn {
+            border: none;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .error-btn {
+            background: #f59e0b;
+        }
+
+        .error-btn:hover {
+            background: #d97706;
+        }
+
+        /* NOTIFICATION */
+
+        #notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 8px 25px rgba(0,0,0,.2);
+        }
+
+        .success {
+            background: #16a34a;
+        }
+
+        .error {
+            background: #dc2626;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            background: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 18px;
+            color: #64748b;
+        }
+
+        /* MOBILE */
+
+        @media(max-width:700px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            .header {
+                padding: 25px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <h1>📋 Post Management</h1>
+
+    <p>
+        Spring Boot REST API • Exception Handling • Request Logging
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <div class="stat-icon">📚</div>
+
+            <h3 id="postCount">0</h3>
+
+            <p>Total Posts</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">🟢</div>
+
+            <h3>Active</h3>
+
+            <p>API Status</p>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">🔐</div>
+
+            <h3>MDC</h3>
+
+            <p>Correlation ID</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATE POST -->
+
+    <div class="form-card">
+
+        <div class="form-title">
+
+            <span style="font-size:28px;">➕</span>
+
+            <h2>Create New Post</h2>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <input
+                type="text"
+                id="title"
+                placeholder="Enter post title"
+            >
+
+
+            <input
+                type="date"
+                id="scheduledDate"
+            >
+
+
+            <textarea
+                id="content"
+                class="full"
+                placeholder="Write your post content..."
+            ></textarea>
+
+
+            <div class="full">
+
+                <button
+                    class="create-btn"
+                    onclick="addPost()"
+                >
+                    ✨ Create Post
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- POSTS -->
+
+    <div class="section-header">
+
+        <h2>📚 All Posts</h2>
+
+        <button
+            class="error-btn"
+            onclick="testError()"
+        >
+            ⚠️ Test 404 Error
+        </button>
+
+    </div>
+
+
+    <div id="posts" class="posts">
+
+        Loading posts...
+
+    </div>
+
+
+</div>
+
+
+<!-- NOTIFICATION -->
+
+<div id="notification"></div>
+
+
+<script>
+
+const API = "/api/posts";
+
+
+/* NOTIFICATION */
+
+function showNotification(message, type) {
+
+    const notification =
+        document.getElementById("notification");
+
+    notification.innerText = message;
+
+    notification.className = type;
+
+    notification.style.display = "block";
+
+    setTimeout(() => {
+
+        notification.style.display = "none";
+
+    }, 3000);
+
+}
+
+
+/* LOAD POSTS */
+
+async function loadPosts() {
+
+    try {
+
+        const response = await fetch(API);
+
+        if (!response.ok) {
+            throw new Error("Unable to load posts");
+        }
+
+        const posts = await response.json();
+
+        document.getElementById("postCount")
+            .innerText = posts.length;
+
+
+        const container =
+            document.getElementById("posts");
+
+
+        if (posts.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <h2>📭 No Posts Yet</h2>
+
+                    <p>Create your first post above.</p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        container.innerHTML = posts.map(post => `
+
+            <div class="post-card">
+
+                <div class="post-id">
+                    POST #${post.id}
+                </div>
+
+                <h3>
+                    ${post.title}
+                </h3>
+
+                <p class="post-content">
+                    ${post.content}
+                </p>
+
+                <span class="date">
+                    📅 ${post.scheduledDate}
+                </span>
+
+                <div class="actions">
+
+                    <button
+                        class="delete-btn"
+                        onclick="deletePost(${post.id})"
+                    >
+                        🗑 Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }
+
+    catch(error) {
+
+        document.getElementById("posts").innerHTML = `
+
+            <div class="empty">
+
+                <h2>⚠️ Server Error</h2>
+
+                <p>
+                    Make sure Spring Boot is running.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* CREATE POST */
+
+async function addPost() {
+
+    const title =
+        document.getElementById("title").value.trim();
+
+    const content =
+        document.getElementById("content").value.trim();
+
+    const scheduledDate =
+        document.getElementById("scheduledDate").value;
+
+
+    if (!title || !content || !scheduledDate) {
+
+        showNotification(
+            "Please fill all fields.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+                title: title,
+
+                content: content,
+
+                scheduledDate: scheduledDate
+
+            })
+
+        });
+
+
+        if (response.ok) {
+
+            showNotification(
+                "Post created successfully! 🎉",
+                "success"
+            );
+
+
+            document.getElementById("title").value = "";
+
+            document.getElementById("content").value = "";
+
+            document.getElementById("scheduledDate").value = "";
+
+
+            loadPosts();
+
+        }
+
+        else {
+
+            const error = await response.json();
+
+            showNotification(
+                error.message || "Failed to create post.",
+                "error"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        showNotification(
+            "Server is not available.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* DELETE */
+
+async function deletePost(id) {
+
+    if (!confirm("Are you sure you want to delete this post?")) {
+        return;
+    }
+
+
+    const response = await fetch(
+        `${API}/${id}`,
+        {
+            method: "DELETE"
+        }
+    );
+
+
+    if (response.ok) {
+
+        showNotification(
+            "Post deleted successfully! 🗑",
+            "success"
+        );
+
+        loadPosts();
+
+    }
+
+    else {
+
+        showNotification(
+            "Post could not be deleted.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* TEST GLOBAL EXCEPTION */
+
+async function testError() {
+
+    try {
+
+        const response =
+            await fetch(`${API}/999`);
+
+        const error =
+            await response.json();
+
+
+        showNotification(
+            `Error ${error.status}: ${error.message}`,
+            "error"
+        );
+
+    }
+
+    catch(error) {
+
+        showNotification(
+            "Unable to connect to server.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* START */
+
+loadPosts();
+
+</script>
+
+</body>
+</html>

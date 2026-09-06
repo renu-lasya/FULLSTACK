@@ -1,0 +1,86 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#7ee8fa,#80ffea);
+}
+
+.container{
+    width:600px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+h1{
+    text-align:center;
+    color:#4A148C;
+    margin-bottom:15px;
+}
+
+h3{
+    text-align:center;
+    margin-bottom:20px;
+    color:#444;
+}
+
+.input-area{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+input{
+    flex:1;
+    padding:12px;
+    border:2px solid #ddd;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.search-box{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.add-btn{
+    background:#6A1B9A;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.add-btn:hover{
+    background:#4A148C;
+}
+
+.post-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+    margin-bottom:10px;
+    background:#f5f5f5;
+    border-radius:8px;
+}
+
+.delete-btn{
+    background:#F44336;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.delete-btn:hover{
+    background:#C62828;
+}

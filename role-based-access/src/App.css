@@ -1,0 +1,44 @@
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(to right,#74ebd5,#ACB6E5);
+}
+
+.container{
+width:450px;
+margin:70px auto;
+padding:30px;
+background:white;
+text-align:center;
+border-radius:10px;
+box-shadow:0 0 10px gray;
+}
+
+h1{
+color:#4b0082;
+}
+
+select{
+width:90%;
+padding:10px;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+background:#4b0082;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+button:hover{
+background:#6a0dad;
+}
+
+a{
+text-decoration:none;
+font-size:18px;
+}

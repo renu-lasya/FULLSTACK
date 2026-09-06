@@ -1,0 +1,41 @@
+### Create a post
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+    "title": "RENULASYA",
+    "content": "24BAI70210 FROM 24NTPP-2A",
+    "scheduledDate": "2026-09-05"
+}
+### Create a post
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+    "title": "RENULASYA",
+    "content": "24BAI70210 FROM 24NTPP-2A",
+    "scheduledDate": "2026-09-05"
+}
+
+### Get post by ID
+GET http://localhost:8080/api/posts/1
+### Update post
+PUT http://localhost:8080/api/posts/1
+Content-Type: application/json
+
+{
+    "title": "RENULASYA UPDATED",
+    "content": "This post has been updated successfully.",
+    "scheduledDate": "2026-09-10"
+}
+### Delete post
+DELETE http://localhost:8080/api/posts/1
+### Test validation
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+    "title": "",
+    "content": "",
+    "scheduledDate": ""
+}

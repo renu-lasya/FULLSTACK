@@ -1,0 +1,99 @@
+body{
+
+margin:0;
+
+font-family:Arial;
+
+background:linear-gradient(to right,#4facfe,#00f2fe);
+
+}
+
+.app{
+
+width:90%;
+
+margin:auto;
+
+padding:20px;
+
+}
+
+h1{
+
+text-align:center;
+
+color:black;
+font-size:45px;
+margin-bottom:30px;
+text-shadow:2px 2px 8px rgba(0,0,0,0.3);
+}
+
+.form{
+
+display:flex;
+
+justify-content:center;
+
+gap:10px;
+
+margin-bottom:20px;
+
+}
+
+input{
+
+padding:12px;
+    border-radius:10px;
+    border:2px solid #ddd;
+    font-size:16px;
+    width:220px;
+}
+
+button{
+    background:linear-gradient(45deg,#7b2ff7,#9d4edd);
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+.fc{
+    width:100%;
+    max-width:1200px;
+    margin:20px auto;
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 8 25px rgba(0,0,0,0.2);
+    overflow-x:auto;
+}
+.fc-daygrid-day{
+height:60px !important;
+}
+
+.fc-scrollgrid{
+height:520px !important;
+width:100%
+}
+.fc-toolbar-title{
+font-size:28px !important;
+}
+
+.fc-button{
+padding:6px 10px !important;
+font-size:13px !important;
+}
+.fc-event{
+font-size:12px;
+padding:2px;
+}
+.fc-view-harness{
+    height:550px !important;
+}
