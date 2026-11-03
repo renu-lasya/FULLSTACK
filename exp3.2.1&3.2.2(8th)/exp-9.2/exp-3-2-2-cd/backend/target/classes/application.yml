@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: cd-canary-lab
+app:
+  version: "1.0.0-stable"
+  canary:
+    enabled: true
+    # percentage of traffic routed to canary version (0-100)
+    traffic-percent: 20
+    canary-version: "1.1.0-canary"
+logging:
+  level:
+    com.renulasya.cd: INFO

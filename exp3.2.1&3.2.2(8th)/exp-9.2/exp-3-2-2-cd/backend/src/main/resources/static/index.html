@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CD + Canary Lab · RENULASYA 24BAI70210</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">🚀 CD Lab</div>
+    <div class="uid">RENULASYA · 24BAI70210</div>
+    <nav>
+      <button class="nav active" data-page="dashboard">Dashboard</button>
+      <button class="nav" data-page="canary">Canary Control</button>
+      <button class="nav" data-page="pipeline">CD Pipeline</button>
+      <button class="nav" data-page="docker">Docker</button>
+      <button class="nav" data-page="howto">How to Run</button>
+    </nav>
+    <div class="side-footer"><div id="conn" class="conn offline">API offline</div></div>
+  </aside>
+
+  <main>
+    <header class="top">
+      <h1 id="page-title">Dashboard</h1>
+      <span class="badge-exp">Experiment 3.2.2</span>
+    </header>
+
+    <section id="page-dashboard" class="page">
+      <div class="cards">
+        <div class="card c1"><div class="c-label">Stable Version</div><div class="c-val" id="s-stable">—</div></div>
+        <div class="card c2"><div class="c-label">Canary Version</div><div class="c-val" id="s-canary">—</div></div>
+        <div class="card c3"><div class="c-label">Canary Traffic</div><div class="c-val" id="s-pct">—</div></div>
+        <div class="card c4"><div class="c-label">Total Requests</div><div class="c-val" id="s-total">0</div></div>
+        <div class="card c5"><div class="c-label">Stable Hits</div><div class="c-val" id="s-sh">0</div></div>
+        <div class="card c6"><div class="c-label">Canary Hits</div><div class="c-val" id="s-ch">0</div></div>
+      </div>
+      <div class="panel">
+        <h3>What is Continuous Deployment + Canary?</h3>
+        <p class="hint">
+          <strong>Continuous Deployment (CD)</strong> automatically deploys after tests pass.
+          <strong>Canary release</strong> sends the new version to a small % of users first.
+          If healthy → promote to 100%. If errors → rollback to stable.
+        </p>
+        <div class="flow">
+          Code → Test → Docker Image → Canary (20%) → Monitor → Promote / Rollback
+        </div>
+      </div>
+    </section>
+
+    <section id="page-canary" class="page hidden">
+      <div class="panel">
+        <h3>Canary Traffic Control</h3>
+        <p class="hint">Change how much traffic goes to the new (canary) version.</p>
+        <div class="btn-row">
+          <button class="secondary" data-pct="0">0% (off)</button>
+          <button class="secondary" data-pct="10">10%</button>
+          <button class="secondary" data-pct="20">20%</button>
+          <button class="secondary" data-pct="50">50%</button>
+          <button class="primary" data-pct="100">100% Promote</button>
+          <button class="danger" id="btn-rollback">Rollback</button>
+          <button class="ghost" id="btn-reset">Reset Stats</button>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="primary" id="btn-sim">Simulate 20 user requests</button>
+        </div>
+        <div id="sim-out" class="result-box" style="margin-top:14px">Click simulate to send traffic…</div>
+      </div>
+      <div class="panel">
+        <h3>Recent routes</h3>
+        <div id="recent" class="result-box">—</div>
+      </div>
+    </section>
+
+    <section id="page-pipeline" class="page hidden">
+      <div class="panel">
+        <h3>CD Pipeline Stages</h3>
+        <div id="stages" class="stages"></div>
+      </div>
+      <div class="panel">
+        <h3>GitHub Actions – cd.yml</h3>
+        <pre class="code">on: push to main
+jobs:
+  1. test          → mvn test
+  2. docker-build  → docker build + tag :canary
+  3. canary-deploy → release at 20% traffic
+  4. promote       → manual full rollout</pre>
+      </div>
+    </section>
+
+    <section id="page-docker" class="page hidden">
+      <div class="panel">
+        <h3>Dockerfile (containerization)</h3>
+        <pre class="code">FROM eclipse-temurin:17-jdk-alpine AS build
+WORKDIR /app
+COPY backend/ …
+RUN mvn -DskipTests package
+
+FROM eclipse-temurin:17-jre-alpine
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT java -jar app.jar</pre>
+        <p class="hint" style="margin-top:12px">Commands (if Docker is installed):</p>
+        <pre class="code">docker build -t renulasya/cd-canary-lab:1.0 .
+docker run -p 8080:8080 renulasya/cd-canary-lab:1.0
+# or:  docker compose up --build</pre>
+      </div>
+    </section>
+
+    <section id="page-howto" class="page hidden">
+      <div class="panel">
+        <h3>Run without Docker (demo)</h3>
+        <pre class="code">cd backend
+mvn spring-boot:run
+# open http://localhost:8080</pre>
+        <h3 style="margin-top:16px">With Docker (optional)</h3>
+        <pre class="code">docker compose up --build</pre>
+        <h3 style="margin-top:16px">CI/CD on GitHub</h3>
+        <ol class="steps">
+          <li>Push project to GitHub</li>
+          <li>Actions → <strong>CD Pipeline – Canary Deploy</strong></li>
+          <li>Tests run → Docker image builds → Canary step logs</li>
+        </ol>
+        <p class="hint" style="margin-top:12px"><strong>RENULASYA 24BAI70210</strong></p>
+      </div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>

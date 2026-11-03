@@ -1,0 +1,14 @@
+{
+  "name": "exp-2-3-1-jwt-rbac",
+  "version": "1.0.0",
+  "description": "Experiment 2.3.1 - JWT Authentication and Role-Based Access Control (RBAC)",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["jwt", "rbac", "authentication", "authorization", "nodejs"],
+  "author": "RENULASYA 24BAI70210",
+  "license": "MIT"
+}

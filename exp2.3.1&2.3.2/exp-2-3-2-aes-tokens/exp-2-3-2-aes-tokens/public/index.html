@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experiment 2.3.2 – AES + Tokens | RENULASYA 24BAI70210</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- LOGIN -->
+  <section id="login-screen">
+    <div class="login-card">
+      <div class="hero">
+        <div class="logo">🔒</div>
+        <h1>AES + Token Lab</h1>
+        <p class="subtitle">Experiment 2.3.2 — Encryption &amp; Access / Refresh Token Lifecycle</p>
+        <p class="submit-line">Submitted by: <strong>RENULASYA</strong> · UID <strong>24BAI70210</strong></p>
+        <div class="points">
+          <div><b>01</b><span>AES-256 encrypts sensitive credentials</span></div>
+          <div><b>02</b><span>Short-lived access tokens</span></div>
+          <div><b>03</b><span>Refresh tokens + rotation</span></div>
+        </div>
+      </div>
+      <form id="login-form" class="panel">
+        <div class="panel-top"><span>Sign in</span><span class="dot">Vault open</span></div>
+        <label>Username<input name="username" value="admin" autocomplete="username" required /></label>
+        <label>Password<input name="password" type="password" value="admin123" autocomplete="current-password" required /></label>
+        <button class="primary" type="submit">Get Tokens</button>
+        <p id="login-note">admin / admin123  ·  dev / dev123</p>
+        <div class="seg">
+          <button type="button" data-fill="admin">Admin</button>
+          <button type="button" data-fill="dev">Dev</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="hidden">
+    <header>
+      <div class="brand">🔒 AES · Tokens <span class="uid">· RENULASYA 24BAI70210</span></div>
+      <div id="who"></div>
+      <div id="timer" class="timer">—</div>
+      <button id="logout-btn" class="quiet" type="button">Sign out</button>
+    </header>
+
+    <div class="shell">
+      <nav class="side">
+        <button data-page="dashboard" class="nav-btn active">Dashboard</button>
+        <button data-page="tokens" class="nav-btn">Token Lifecycle</button>
+        <button data-page="encrypt" class="nav-btn">AES Encrypt Demo</button>
+        <button data-page="vault" class="nav-btn">Credential Vault</button>
+      </nav>
+
+      <main>
+        <!-- Dashboard -->
+        <div id="page-dashboard" class="page">
+          <h2>Welcome, <span id="dash-name"></span></h2>
+          <p class="muted">You hold a short-lived <strong>access token</strong> and a longer-lived <strong>refresh token</strong>.</p>
+          <div class="cards">
+            <div class="card accent">
+              <h3>Access Token</h3>
+              <p>Expires in <span id="card-access-ttl">90</span>s · Used for API calls</p>
+            </div>
+            <div class="card green">
+              <h3>Refresh Token</h3>
+              <p>Long-lived · Used only to obtain new access tokens</p>
+            </div>
+            <div class="card purple">
+              <h3>AES-256-CBC</h3>
+              <p>Sensitive secrets encrypted before storage</p>
+            </div>
+          </div>
+          <div class="info-box">
+            <h3>What this experiment shows</h3>
+            <ol>
+              <li>Login issues both an <strong>access token</strong> (short) and a <strong>refresh token</strong> (long).</li>
+              <li>API calls use only the access token. When it expires you get 401.</li>
+              <li>Call <strong>Refresh</strong> to get a new access token (old refresh is rotated).</li>
+              <li>Sensitive values (API keys, OAuth secrets) are encrypted with <strong>AES-256-CBC</strong> before storage.</li>
+              <li>Plaintext is never stored — only ciphertext + IV.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Token Lifecycle -->
+        <div id="page-tokens" class="page hidden">
+          <h2>Token Lifecycle</h2>
+          <p class="muted">Watch the access token countdown. When it hits 0, protected APIs return 401 until you refresh.</p>
+          <div class="token-row">
+            <div class="token-box">
+              <h4>Access Token <span id="access-badge" class="badge live">LIVE</span></h4>
+              <code id="access-preview" class="token-preview"></code>
+              <p class="small">Expires in <strong id="access-countdown">—</strong> seconds</p>
+            </div>
+            <div class="token-box">
+              <h4>Refresh Token</h4>
+              <code id="refresh-preview" class="token-preview"></code>
+              <p class="small">Used only for POST /auth/refresh</p>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button id="btn-refresh" class="primary">🔄 Refresh Access Token</button>
+            <button id="btn-test-me" class="secondary">Test GET /api/me</button>
+          </div>
+          <div id="token-result" class="result-box">Results appear here…</div>
+        </div>
+
+        <!-- AES Encrypt Demo -->
+        <div id="page-encrypt" class="page hidden">
+          <h2>AES-256-CBC Encrypt / Decrypt Demo</h2>
+          <p class="muted">Type any text → encrypt → copy ciphertext &amp; IV → decrypt. No login required for this demo.</p>
+          <div class="form-grid">
+            <label>Plaintext<textarea id="plain-in" rows="3" placeholder="e.g. my-oauth-client-secret-xyz"></textarea></label>
+            <button id="btn-encrypt" class="primary">Encrypt with AES-256-CBC</button>
+          </div>
+          <div id="enc-out" class="result-box">Ciphertext and IV will appear here…</div>
+          <div class="form-grid" style="margin-top:20px">
+            <label>Ciphertext<input id="cipher-in" placeholder="Paste ciphertext" /></label>
+            <label>IV<input id="iv-in" placeholder="Paste IV (hex)" /></label>
+            <button id="btn-decrypt" class="secondary">Decrypt</button>
+          </div>
+          <div id="dec-out" class="result-box">Decrypted plaintext will appear here…</div>
+        </div>
+
+        <!-- Credential Vault -->
+        <div id="page-vault" class="page hidden">
+          <h2>Secure Credential Vault</h2>
+          <p class="muted">Store third-party secrets (OAuth client secrets, API keys). They are AES-encrypted before storage. Requires a valid access token.</p>
+          <div class="form-grid">
+            <label>Label<input id="cred-label" placeholder="e.g. GitHub OAuth Client Secret" /></label>
+            <label>Secret (plaintext — will be encrypted)<input id="cred-secret" type="password" placeholder="sk_live_••••••••" /></label>
+            <button id="btn-store" class="primary">🔐 Encrypt &amp; Store</button>
+          </div>
+          <div id="vault-store-result" class="result-box">Store result…</div>
+          <div class="btn-row" style="margin-top:16px">
+            <button id="btn-list" class="secondary">List My Encrypted Credentials</button>
+          </div>
+          <div id="vault-list" class="result-box">Credential list…</div>
+          <div class="form-grid" style="margin-top:16px">
+            <label>Credential ID to decrypt<input id="cred-id" placeholder="Paste id from list" /></label>
+            <button id="btn-decrypt-cred" class="primary">🔓 Decrypt</button>
+          </div>
+          <div id="vault-decrypt-result" class="result-box">Decrypted value…</div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>

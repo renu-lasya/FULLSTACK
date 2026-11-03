@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kafka-reliability-system
+
+app:
+  kafka:
+    topic: scheduled-posts
+    dlq-topic: scheduled-posts.DLT
+  retry:
+    max-attempts: 3
+
+logging:
+  level:
+    com.renulasya.kafka: INFO

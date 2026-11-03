@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kafka Reliability · RENULASYA 24BAI70210</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">⚡ Kafka Lab</div>
+    <div class="uid">RENULASYA · 24BAI70210</div>
+    <nav>
+      <button class="nav active" data-page="dashboard">Dashboard</button>
+      <button class="nav" data-page="publish">Publish Event</button>
+      <button class="nav" data-page="monitor">Event Monitor</button>
+      <button class="nav" data-page="dlq">Dead Letter Queue</button>
+      <button class="nav" data-page="demo">Practical Demo</button>
+      <button class="nav" data-page="architecture">Architecture</button>
+    </nav>
+    <div class="side-footer">
+      <div id="conn" class="conn offline">API offline</div>
+      <button id="btn-reset" class="ghost">Reset Stats</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="top">
+      <h1 id="page-title">Dashboard</h1>
+      <span class="badge-exp">Experiment 3.1.1</span>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section id="page-dashboard" class="page">
+      <div class="cards" id="stat-cards">
+        <div class="card c1"><div class="c-label">Total Events</div><div class="c-val" id="s-total">0</div></div>
+        <div class="card c2"><div class="c-label">Successful</div><div class="c-val" id="s-success">0</div></div>
+        <div class="card c3"><div class="c-label">Failed Attempts</div><div class="c-val" id="s-failed">0</div></div>
+        <div class="card c4"><div class="c-label">Retried</div><div class="c-val" id="s-retried">0</div></div>
+        <div class="card c5"><div class="c-label">DLQ</div><div class="c-val" id="s-dlq">0</div></div>
+        <div class="card c6"><div class="c-label">Duplicates</div><div class="c-val" id="s-dup">0</div></div>
+        <div class="card c7"><div class="c-label">Processing</div><div class="c-val" id="s-proc">0</div></div>
+      </div>
+      <div class="panel">
+        <h3>Live Activity</h3>
+        <div id="live-feed" class="live-feed"></div>
+      </div>
+    </section>
+
+    <!-- PUBLISH -->
+    <section id="page-publish" class="page hidden">
+      <div class="panel form-panel">
+        <h3>Publish Scheduled Post Event</h3>
+        <div class="grid-2">
+          <label>Event ID <input id="f-eventId" placeholder="EVT-1001" /></label>
+          <label>Post ID <input id="f-postId" placeholder="POST-101" /></label>
+          <label>User Name <input id="f-user" value="Lasya" /></label>
+          <label>Platform
+            <select id="f-platform">
+              <option>Instagram</option>
+              <option>Twitter</option>
+              <option>LinkedIn</option>
+              <option>Facebook</option>
+            </select>
+          </label>
+          <label class="full">Content <textarea id="f-content" rows="2">Hello Kafka Reliability!</textarea></label>
+          <label>Scheduled Time <input id="f-time" type="time" value="10:30" /></label>
+          <label>Failure Simulation
+            <select id="f-fail">
+              <option value="SUCCESS">SUCCESS</option>
+              <option value="FAIL_ONCE">FAIL ONCE (then success)</option>
+              <option value="FAIL_TWICE">FAIL TWICE (then success)</option>
+              <option value="ALWAYS_FAIL">ALWAYS FAIL → DLQ</option>
+            </select>
+          </label>
+        </div>
+        <button id="btn-publish" class="primary">Publish Event → Kafka</button>
+        <p id="publish-msg" class="msg"></p>
+      </div>
+    </section>
+
+    <!-- MONITOR -->
+    <section id="page-monitor" class="page hidden">
+      <div class="panel">
+        <h3>Event Log</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Event ID</th><th>Post ID</th><th>Platform</th>
+                <th>Status</th><th>Attempt</th><th>Message</th><th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="log-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DLQ -->
+    <section id="page-dlq" class="page hidden">
+      <div class="panel">
+        <h3>Dead Letter Queue (scheduled-posts.DLT)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Event ID</th><th>Post ID</th><th>Error</th>
+                <th>Retries</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dlq-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="page-demo" class="page hidden">
+      <div class="panel">
+        <h3>Practical Demo – One-click tests</h3>
+        <p class="hint">These buttons publish pre-configured events so you can demonstrate Success, Retry, DLQ and Idempotency to your teacher.</p>
+        <div class="demo-grid">
+          <button class="demo-btn" data-demo="success">▶ Test Success</button>
+          <button class="demo-btn" data-demo="fail_once">▶ Test Retry (Fail Once)</button>
+          <button class="demo-btn" data-demo="fail_twice">▶ Test Retry (Fail Twice)</button>
+          <button class="demo-btn" data-demo="always_fail">▶ Test DLQ (Always Fail)</button>
+          <button class="demo-btn" data-demo="duplicate">▶ Test Duplicate</button>
+          <button class="demo-btn accent" data-demo="all">▶ Run All Tests</button>
+        </div>
+        <div id="demo-log" class="live-feed" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="page-architecture" class="page hidden">
+      <div class="panel">
+        <h3>System Architecture</h3>
+        <pre class="arch">
+                 ┌──────────────────┐
+                 │   Web Dashboard  │
+                 └────────┬─────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │ Spring Boot API  │
+                 └────────┬─────────┘
+                          ↓
+                 ┌──────────────────┐
+                 │  Kafka Producer  │
+                 └────────┬─────────┘
+                          ↓
+              ┌────────────────────────┐
+              │ scheduled-posts topic  │
+              └────────────┬───────────┘
+                           ↓
+                 ┌──────────────────┐
+                 │ Kafka Consumer   │
+                 └────────┬─────────┘
+                          ↓
+                  ┌───────────────┐
+                  │  Idempotency  │
+                  └───────┬───────┘
+                          ↓
+                     Processing
+                    ↙          ↘
+                SUCCESS       FAILURE
+                               ↓
+                         Retry + Backoff
+                         (1s → 2s → 4s)
+                               ↓
+                         Max Retries?
+                         ↙          ↘
+                       NO            YES
+                       ↓              ↓
+                    Process    scheduled-posts.DLT
+        </pre>
+        <p class="hint">Submitted by: <strong>RENULASYA 24BAI70210</strong> · Experiment 3.1.1</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>

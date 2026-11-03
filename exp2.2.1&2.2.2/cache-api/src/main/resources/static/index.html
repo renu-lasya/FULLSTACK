@@ -217,7 +217,18 @@
             box-shadow: 0 3px 15px rgba(0,0,0,0.08);
             margin-bottom: 35px;
         }
+/* =========================
+   RESPONSE TIME
+========================= */
 
+#responseTime {
+    font-size: 30px;
+    white-space: nowrap;
+}
+
+#apiStatus {
+    font-size: 30px;
+}
         .form-card h2 {
             margin-top: 0;
         }
@@ -411,8 +422,11 @@
         @media(max-width: 800px) {
 
             .stats {
-                grid-template-columns: 1fr;
-            }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
             #posts {
                 grid-template-columns: 1fr;
@@ -478,36 +492,50 @@
 
     <!-- STATISTICS -->
 
-    <div class="stats">
+    <!-- STATISTICS -->
 
-        <div class="stat-card">
-            <div class="stat-icon">📄</div>
+<div class="stats">
 
-            <h2 id="totalPosts">0</h2>
+    <div class="stat-card">
+        <div class="stat-icon">📄</div>
 
-            <p>Total Posts</p>
-        </div>
+        <h2 id="totalPosts">0</h2>
 
-
-        <div class="stat-card">
-            <div class="stat-icon">⚡</div>
-
-            <h2>Active</h2>
-
-            <p>Cache Status</p>
-        </div>
+        <p>Total Posts</p>
+    </div>
 
 
-        <div class="stat-card">
-            <div class="stat-icon">🚀</div>
+    <div class="stat-card">
+        <div class="stat-icon">⚡</div>
 
-            <h2>Fast</h2>
+        <h2>Active</h2>
 
-            <p>Optimized API</p>
-        </div>
+        <p>Cache Status</p>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-icon">🚀</div>
+
+        <h2 id="apiStatus">Fast</h2>
+
+        <p>Optimized API</p>
+    </div>
+
+
+    <!-- NEW RESPONSE TIME CARD -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">⏱️</div>
+
+        <h2 id="responseTime">-- ms</h2>
+
+        <p>API Response Time</p>
 
     </div>
 
+</div>
 
     <!-- CACHE STATUS -->
 
@@ -773,6 +801,10 @@ async function createPost() {
    LOAD POSTS
 ============================ */
 
+/* ============================
+   LOAD POSTS + RESPONSE TIME
+============================ */
+
 async function loadPosts() {
 
     const container =
@@ -787,8 +819,45 @@ async function loadPosts() {
 
     try {
 
+        // Start measuring API response time
+        const startTime = performance.now();
+
+
         const response =
             await fetch("/api/posts");
+
+
+        // Stop measuring
+        const endTime = performance.now();
+
+
+        // Calculate response time
+        const responseTime =
+            Math.round(endTime - startTime);
+
+
+        // Display response time
+        document.getElementById("responseTime")
+            .innerText = responseTime + " ms";
+
+
+        // Update API status
+        const apiStatus =
+            document.getElementById("apiStatus");
+
+
+        if (responseTime < 100) {
+
+            apiStatus.innerText = "Fast";
+
+        } else if (responseTime < 500) {
+
+            apiStatus.innerText = "Good";
+
+        } else {
+
+            apiStatus.innerText = "Slow";
+        }
 
 
         if (!response.ok) {
@@ -808,6 +877,15 @@ async function loadPosts() {
 
         console.error(error);
 
+
+        document.getElementById("responseTime")
+            .innerText = "-- ms";
+
+
+        document.getElementById("apiStatus")
+            .innerText = "Error";
+
+
         container.innerHTML =
             `<div class="empty">
 
@@ -826,8 +904,6 @@ async function loadPosts() {
             </div>`;
     }
 }
-
-
 /* ============================
    DISPLAY POSTS
 ============================ */

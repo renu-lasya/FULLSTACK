@@ -11,17 +11,19 @@ function Calendar() {
     {
       id: "1",
       title: "Instagram Post",
-      date: "2026-08-05"
+      date: "2026-10-05",
+      color: "green"        
     },
     {
       id: "2",
       title: "LinkedIn Post",
-      date: "2026-08-10"
+      date: "2026-10-10",
+      color: "green"        
     },
      {
     id: "3",
     title: "RENULASYA",
-    date: "2026-07-28",
+    date: "2026-10-28",
     color: "green"        // Completed
   }
   ]);

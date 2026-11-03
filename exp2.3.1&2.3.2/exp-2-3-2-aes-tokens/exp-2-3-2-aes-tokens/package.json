@@ -1,0 +1,14 @@
+{
+  "name": "exp-2-3-2-aes-tokens",
+  "version": "1.0.0",
+  "description": "Experiment 2.3.2 - AES Encryption and Access/Refresh Token Lifecycle",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["aes", "encryption", "access-token", "refresh-token", "security"],
+  "author": "RENULASYA 24BAI70210",
+  "license": "MIT"
+}

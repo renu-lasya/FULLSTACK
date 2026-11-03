@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experiment 2.3.1 – JWT + RBAC | RENULASYA 24BAI70210</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- ========== LOGIN SCREEN ========== -->
+  <section id="login-screen">
+    <div class="login-card">
+      <div class="hero">
+        <div class="logo">🔐</div>
+        <h1>JWT + RBAC Lab</h1>
+        <p class="subtitle">Experiment 2.3.1 — Secure APIs with JSON Web Tokens &amp; Role-Based Access Control</p>
+        <p class="subtitle" style="margin-top:6px;font-size:0.85rem;opacity:0.9">Submitted by: <strong>RENULASYA</strong> · UID <strong>24BAI70210</strong></p>
+        <div class="points">
+          <div><b>01</b><span>Login issues a signed JWT</span></div>
+          <div><b>02</b><span>Filter validates token on every request</span></div>
+          <div><b>03</b><span>Role decides which pages you can open</span></div>
+        </div>
+      </div>
+
+      <form id="login-form" class="panel">
+        <div class="panel-top">
+          <span>Sign in</span>
+          <span class="dot">Desk open</span>
+        </div>
+        <label>
+          Username
+          <input name="username" value="admin" autocomplete="username" required />
+        </label>
+        <label>
+          Password
+          <input name="password" type="password" value="admin123" autocomplete="current-password" required />
+        </label>
+        <button class="primary" type="submit">Issue JWT Pass</button>
+        <p id="login-note">Choose a role below or type credentials.</p>
+        <div class="seg">
+          <button type="button" data-fill="admin">Admin</button>
+          <button type="button" data-fill="editor">Editor</button>
+          <button type="button" data-fill="viewer">Viewer</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ========== APP (after login) ========== -->
+  <section id="app" class="hidden">
+    <header>
+      <div class="brand">🔐 JWT · RBAC <span style="font-size:0.7rem;opacity:0.7;font-weight:400">· RENULASYA 24BAI70210</span></div>
+      <div id="who"></div>
+      <button id="logout-btn" class="quiet" type="button">Sign out</button>
+    </header>
+
+    <div class="shell">
+      <!-- Role-based navigation -->
+      <nav class="side">
+        <button data-page="dashboard" class="nav-btn active">Dashboard</button>
+        <button data-page="viewer" class="nav-btn">Viewer Page</button>
+        <button data-page="editor" class="nav-btn" id="nav-editor">Editor Page</button>
+        <button data-page="admin" class="nav-btn" id="nav-admin">Admin Page</button>
+        <button data-page="token" class="nav-btn">Token Inspector</button>
+      </nav>
+
+      <main>
+        <!-- Dashboard -->
+        <div id="page-dashboard" class="page">
+          <h2>Welcome, <span id="dash-name"></span></h2>
+          <p class="muted">You are signed in with role <strong id="dash-role"></strong>.</p>
+          <div class="cards" id="role-cards"></div>
+          <div class="info-box">
+            <h3>How this works</h3>
+            <ol>
+              <li>You logged in → server verified username/password.</li>
+              <li>Server created a <strong>JWT</strong> containing your username and role.</li>
+              <li>Every protected API call sends <code>Authorization: Bearer &lt;token&gt;</code>.</li>
+              <li>The authentication filter validates the signature and expiry.</li>
+              <li>Role-based rules decide if you may enter Admin / Editor / Viewer pages.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Viewer page -->
+        <div id="page-viewer" class="page hidden">
+          <h2>👁️ Viewer Page</h2>
+          <p class="muted">Accessible by <strong>ADMIN, EDITOR, VIEWER</strong></p>
+          <div id="viewer-result" class="result-box">Loading…</div>
+        </div>
+
+        <!-- Editor page -->
+        <div id="page-editor" class="page hidden">
+          <h2>✏️ Editor Page</h2>
+          <p class="muted">Accessible by <strong>ADMIN, EDITOR</strong> only</p>
+          <div id="editor-result" class="result-box">Loading…</div>
+        </div>
+
+        <!-- Admin page -->
+        <div id="page-admin" class="page hidden">
+          <h2>🛠️ Admin Page</h2>
+          <p class="muted">Accessible by <strong>ADMIN</strong> only</p>
+          <div id="admin-result" class="result-box">Loading…</div>
+        </div>
+
+        <!-- Token inspector -->
+        <div id="page-token" class="page hidden">
+          <h2>🔍 JWT Token Inspector</h2>
+          <p class="muted">Header · Payload · Signature (decoded for learning)</p>
+          <div id="token-parts" class="token-parts"></div>
+          <div id="token-claims" class="result-box"></div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script src="/app.js"></script>
+</body>
+</html>
